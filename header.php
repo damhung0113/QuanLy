@@ -1,0 +1,27 @@
+<?php
+echo '<header>';
+echo '<div class="header-top">';
+echo '<div class="row">';
+echo '<div class="col-lg-3 col-md-4">';
+echo '<div class="header-top-left">';
+echo '<a href="/QuanLy/index.php" class="btn btn-info">Trang chủ</a>';
+echo '</div>';
+echo '</div>';
+echo '<div class="col-lg-9 col-md-8">';
+echo '<div class="header-top-right">';
+echo '<ul class="ht-menu">';
+echo '<li>';
+echo '<a href="" style="text-decoration: none;">Hướng dẫn sử dụng</a>';
+echo '</li>';
+echo '<li>';
+echo '<a href="" style="text-decoration: none;">Thông báo</a>';
+echo '</li>';
+echo '<li>';
+echo  '<a href="index.php?act=logout" class="btn btn-danger float-right">Đăng xuất</a>';
+echo '</li>';
+echo '</ul>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+echo '</header>';
