@@ -11,7 +11,6 @@ if (isset($_GET["act"]) && $_GET["act"] == "logout") {
   header("Location: /QuanLy/taikhoan/login.php");
   setcookie("success", "Bạn đã đăng xuất!", time() + 1, "/", "", 0);
 }
-
 if (!isset($_SESSION["loged_admin"]) && $_GET["act"] != "logout") {
   header("Location: /QuanLy/taikhoan/login.php");
   setcookie("error", "Bạn chưa đăng nhập!", time() + 1, "/", "", 0);
@@ -88,22 +87,28 @@ if (!isset($_SESSION["loged_admin"]) && $_GET["act"] != "logout") {
           </div>
           <div class="top-content-1 d-flex justify-content-around">
             <div class="">
-              <img src="../images/lylich.png" alt="">
-              <div class="content-header">
-                <a href="#">Danh sách cán bộ</a>
-              </div>
+              <a href="./canbo/index.php">
+                <img src="../images/lylich.png" alt="">
+                <div class="content-header">
+                  Danh sách cán bộ
+                </div>
+              </a>
             </div>
             <div class="">
-              <img src="../images/thidua.png" alt="" style="width: 220px;">
-              <div class="content-header">
-                <a href="#">Danh sách giải thưởng</a>
-              </div>
+              <a href="#">
+                <img src="../images/thidua.png" alt="" style="width: 220px;">
+                <div class="content-header">
+                  Danh sách giải thưởng
+                </div>
+              </a>
             </div>
             <div class="">
-              <img src="../images/kyluat.jpg" alt="">
-              <div class="content-header">
-                <a href="">Danh sách kỷ luật</a>
-              </div>
+              <a href="#">
+                <img src="../images/kyluat.jpg" alt="">
+                <div class="content-header">
+                  Danh sách kỷ luật
+                </div>
+              </a>
             </div>
           </div>
           <div class="top-content-1 d-flex justify-content-around">
@@ -116,16 +121,20 @@ if (!isset($_SESSION["loged_admin"]) && $_GET["act"] != "logout") {
               </a>
             </div>
             <div class="">
-              <img src="../images/khen-thuong.png" alt="">
-              <div class="content-header">
-                <a href="">Danh sách khen thưởng</a>
-              </div>
+              <a href="#">
+                <img src="../images/khen-thuong.png" alt="">
+                <div class="content-header">
+                  Danh sách khen thưởng
+                </div>
+              </a>
             </div>
             <div class="">
-              <img src="../images/van-ban.png" alt="">
-              <div class="content-header">
-                <a href="">Tổng hợp báo cáo</a>
-              </div>
+              <a href="#">
+                <img src="../images/van-ban.png" alt="">
+                <div class="content-header">
+                  Tổng hợp báo cáo
+                </div>
+              </a>
             </div>
           </div>
         </div>
