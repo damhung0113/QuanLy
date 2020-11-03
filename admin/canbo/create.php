@@ -11,18 +11,36 @@ if (isset($_SESSION["loged_user"])) {
 $ds_truong = get_ds_truong();
 $ds_khoa = get_ds_khoa();
 $ds_bo_mon = get_ds_bo_mon();
-
-$truong = '';
+$truong = '<option value="" disabled selected>Chọn một trường</option>';
 $khoa = '';
 $bo_mon = '';
 while ($row = mysqli_fetch_row($ds_truong)) {
-  $truong .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+  if (isset($_GET["truong"]) && $row[0] == intval($_GET["truong"])) {
+    $khoa_chained = $row[0];
+    $khoa .= '<option value="" disabled selected>Chọn một khoa</option>';
+    $truong .= '<option value = "' . $row[0] . '" selected>' . $row[1] . '</option>';
+  } else {
+    $truong .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+  }
 }
 while ($row = mysqli_fetch_row($ds_khoa)) {
-  $khoa .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+  if (isset($_GET["truong"])) {
+    if ($khoa_chained == $row[2]) {
+      if (isset($_GET["khoa"]) && $row[0] == intval($_GET["khoa"])) {
+        $bo_mon_chained = $row[0];
+        $khoa .= '<option value = "' . $row[0] . '" selected>' . $row[1] . '</option>';
+      } else {
+        $khoa .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+      }
+    }
+  }
 }
 while ($row = mysqli_fetch_row($ds_bo_mon)) {
-  $bo_mon .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+  if (isset($_GET["khoa"])) {
+    if ($bo_mon_chained == $row[2]) {
+      $bo_mon .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+    }
+  }
 }
 
 $count = intval(mysqli_fetch_row(count_CB())[0]);
@@ -30,12 +48,17 @@ $count++;
 if (isset($_POST["create"])) {
   $c_name = $_POST["name"];
   $c_truong = $_POST["truong"];
-  $c_khoa = $_POST["khoa"];
-  $c_bo_mon = $_POST["bo_mon"];
+  $c_khoa = isset($_POST["khoa"]) ? $_POST["khoa"] : null;
+  $c_bo_mon = isset($_POST["bo_mon"]) ? $_POST["bo_mon"] : null;
 
-  if (isset($c_name) && isset($c_truong) && isset($c_khoa) && isset($c_bo_mon)) {
-
-    $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong','$c_khoa','$c_bo_mon')");
+  if (isset($c_name) && isset($c_truong)) {
+    if (isset($c_khoa) && isset($c_bo_mon)) {
+      $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',$c_khoa,$c_bo_mon)");
+    } else if (isset($c_khoa)) {
+      $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',$c_khoa,nullcss/style.css)");
+    } else {
+      $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',null,null)");
+    }
     if ($c) {
       header("location:index.php");
       setcookie("success", "Hồ sơ cán bộ được tạo thành công!", time() + 1, "/", "", 0);
@@ -56,6 +79,19 @@ if (isset($_POST["create"])) {
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script language=JavaScript>
+      function reloadTruong(form) {
+          const val = form.truong.options[form.truong.options.selectedIndex].value;
+          self.location = 'create.php?truong=' + val;
+      }
+
+      function reloadKhoa(form) {
+          const val = form.truong.options[form.truong.options.selectedIndex].value;
+          const val2 = form.khoa.options[form.khoa.options.selectedIndex].value;
+          self.location = 'create.php?truong=' + val + '&khoa=' + val2;
+      }
+  </script>
 </head>
 <body>
 <form action="" method="post">
@@ -73,19 +109,14 @@ if (isset($_POST["create"])) {
             <div class="card-body">
               <form class="form" role="form" autocomplete="off" id="" novalidate="" method="POST">
                 <div class="form-group">
-                  <label for="name">Họ tên cán bộ</label>
-                  <input required type="text" class="form-control rounded-0" name="name"
-                         id="name" aria-label="" placeholder="Nhập họ và tên...">
-                </div>
-                <div class="form-group">
                   <label for="truong">Trường</label>
-                  <select id="truong" name="truong" class="form-control">
+                  <select id="truong" name="truong" onchange="reloadTruong(this.form)" class="form-control">
                     <?php echo $truong; ?>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="khoa">Khoa</label>
-                  <select id="khoa" name="khoa" class="form-control">
+                  <select id="khoa" name="khoa" onchange="reloadKhoa(this.form)" class="form-control">
                     <?php echo $khoa; ?>
                   </select>
                 </div>
@@ -94,6 +125,11 @@ if (isset($_POST["create"])) {
                   <select id="bo_mon" name="bo_mon" class="form-control">
                     <?php echo $bo_mon; ?>
                   </select>
+                </div>
+                <div class="form-group">
+                  <label for="name">Họ tên cán bộ</label>
+                  <input required type="text" class="form-control rounded-0" name="name"
+                         id="name" aria-label="" placeholder="Nhập họ và tên...">
                 </div>
                 <button type="submit" name="create" class="btn btn-primary btn float-right"
                         id="">

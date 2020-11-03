@@ -8,7 +8,25 @@ if (isset($_SESSION["loged_user"])) {
   header("Location: /opt/lampp/htdocs/QuanLy/index.php");
 }
 
-$staffs = select();
+
+if (isset($_GET['page_no']) && $_GET['page_no'] != "") {
+  $page_no = $_GET['page_no'];
+} else {
+  $page_no = 1;
+}
+
+$total_records_per_page = 10;
+$offset = ($page_no - 1) * $total_records_per_page;
+$previous_page = $page_no - 1;
+$next_page = $page_no + 1;
+$adjacents = "2";
+$result_count = count_data();
+$total_records = mysqli_fetch_array($result_count);
+$total_records = $total_records['total_records'];
+$total_no_of_pages = ceil($total_records / $total_records_per_page);
+$second_last = $total_no_of_pages - 1; // total page minus 1
+
+$staffs = select($offset, $total_records_per_page);
 $content = '';
 while ($row = mysqli_fetch_row($staffs)) {
   $content .= '<tr><td>' . $row[0] .
@@ -16,7 +34,7 @@ while ($row = mysqli_fetch_row($staffs)) {
       '</td><td>' . (isset(mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong) ? mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong : "") .
       '</td><td>' . (isset(mysqli_fetch_object(get_ten_khoa($row[3]))->Ten_khoa) ? mysqli_fetch_object(get_ten_khoa($row[3]))->Ten_khoa : "") .
       '</td><td>' . (isset(mysqli_fetch_object(get_ten_bo_mon($row[4]))->Ten_bo_mon) ? mysqli_fetch_object(get_ten_bo_mon($row[4]))->Ten_bo_mon : "") .
-      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="edit.php?Ma_CB='. $row[0]. '"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="destroy.php?Ma_CB='. $row[0]. '"' . '>Xóa</a>' .
+      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="edit.php?Ma_CB=' . $row[0] . '"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="destroy.php?Ma_CB=' . $row[0] . '"' . '>Xóa</a>' .
       '</td></tr>';
 }
 ?>
@@ -29,6 +47,7 @@ while ($row = mysqli_fetch_row($staffs)) {
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="/QuanLy/css/login.css">
   <link rel="stylesheet" href="/QuanLy/css/style.css">
+  <link rel="stylesheet" href="/QuanLy/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <link rel="shortcut icon" href="/QuanLy/images/favicon.ico" type="image/x-icon"/>
@@ -92,6 +111,80 @@ while ($row = mysqli_fetch_row($staffs)) {
       </div>
     </div>
   </div>
+  <ul class="pagination">
+    <?php if($page_no > 1){ echo "<li><a href='?page_no=1'>Trang đầu</a></li>"; } ?>
+
+    <li <?php if ($page_no <= 1) {
+      echo "class='disabled'";
+    } ?>>
+      <a <?php if ($page_no > 1) {
+        echo "href='?page_no=$previous_page'";
+      } ?>>Trang trước</a>
+    </li>
+
+    <?php
+    if ($total_no_of_pages <= 10) {
+      for ($counter = 1; $counter <= $total_no_of_pages; $counter++) {
+        if ($counter == $page_no) {
+          echo "<li class='active'><a>$counter</a></li>";
+        } else {
+          echo "<li><a href='?page_no=$counter'>$counter</a></li>";
+        }
+      }
+    } elseif ($total_no_of_pages > 10) {
+
+      if ($page_no <= 4) {
+        for ($counter = 1; $counter < 8; $counter++) {
+          if ($counter == $page_no) {
+            echo "<li class='active'><a>$counter</a></li>";
+          } else {
+            echo "<li><a href='?page_no=$counter'>$counter</a></li>";
+          }
+        }
+        echo "<li><a>...</a></li>";
+        echo "<li><a href='?page_no=$second_last'>$second_last</a></li>";
+        echo "<li><a href='?page_no=$total_no_of_pages'>$total_no_of_pages</a></li>";
+      } elseif ($page_no > 4 && $page_no < $total_no_of_pages - 4) {
+        echo "<li><a href='?page_no=1'>1</a></li>";
+        echo "<li><a href='?page_no=2'>2</a></li>";
+        echo "<li><a>...</a></li>";
+        for ($counter = $page_no - $adjacents; $counter <= $page_no + $adjacents; $counter++) {
+          if ($counter == $page_no) {
+            echo "<li class='active'><a>$counter</a></li>";
+          } else {
+            echo "<li><a href='?page_no=$counter'>$counter</a></li>";
+          }
+        }
+        echo "<li><a>...</a></li>";
+        echo "<li><a href='?page_no=$second_last'>$second_last</a></li>";
+        echo "<li><a href='?page_no=$total_no_of_pages'>$total_no_of_pages</a></li>";
+      } else {
+        echo "<li><a href='?page_no=1'>1</a></li>";
+        echo "<li><a href='?page_no=2'>2</a></li>";
+        echo "<li><a>...</a></li>";
+
+        for ($counter = $total_no_of_pages - 6; $counter <= $total_no_of_pages; $counter++) {
+          if ($counter == $page_no) {
+            echo "<li class='active'><a>$counter</a></li>";
+          } else {
+            echo "<li><a href='?page_no=$counter'>$counter</a></li>";
+          }
+        }
+      }
+    }
+    ?>
+
+    <li <?php if ($page_no >= $total_no_of_pages) {
+      echo "class='disabled'";
+    } ?>>
+      <a <?php if ($page_no < $total_no_of_pages) {
+        echo "href='?page_no=$next_page'";
+      } ?>>Trang tiếp</a>
+    </li>
+    <?php if ($page_no < $total_no_of_pages) {
+      echo "<li><a href='?page_no=$total_no_of_pages'>Trang cuối &rsaquo;&rsaquo;</a></li>";
+    } ?>
+  </ul>
   <?php
   include_once("/opt/lampp/htdocs/QuanLy/footer.php");
   ?>
