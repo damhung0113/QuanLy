@@ -1,9 +1,14 @@
 <?php
 include "/opt/lampp/htdocs/QuanLy/connect.php";
 
-function select() {
+function select($offset, $total_records_per_page) {
   global $connect;
-  return mysqli_query($connect, "select * from can_bo ");
+  return mysqli_query($connect, "select * from can_bo limit $offset, $total_records_per_page");
+}
+
+function count_data() {
+  global $connect;
+  return mysqli_query($connect, "select COUNT(*) As total_records FROM can_bo");
 }
 
 function get_ds_truong() {
@@ -23,7 +28,7 @@ function get_ds_bo_mon() {
 
 function count_CB() {
   global $connect;
-  return mysqli_query($connect, "select count(Ma_CB) from can_bo");
+  return mysqli_query($connect, "select Ma_CB from can_bo order by Ma_CB DESC LIMIT 1");
 }
 
 function get_ten_truong($ma_truong) {
