@@ -8,25 +8,25 @@ if (isset($_SESSION["loged_user"])) {
   header("Location: /opt/lampp/htdocs/QuanLy/index.php");
 }
 
-
-if (isset($_GET['page_no']) && $_GET['page_no'] != "") {
+// Chức năng phân trang
+if (isset($_GET['page_no']) && $_GET['page_no'] != "") { // kiểm tra chỉ số trang hiện tại
   $page_no = $_GET['page_no'];
 } else {
   $page_no = 1;
 }
 
-$total_records_per_page = 10;
-$offset = ($page_no - 1) * $total_records_per_page;
+$total_records_per_page = 10; // tổng số bản ghi trong một trang
+$offset = ($page_no - 1) * $total_records_per_page; // offset trong mysql
 $previous_page = $page_no - 1;
 $next_page = $page_no + 1;
 $adjacents = "2";
-$result_count = count_data();
+$result_count = count_data(); // tổng số bản ghi
 $total_records = mysqli_fetch_array($result_count);
 $total_records = $total_records['total_records'];
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
 $second_last = $total_no_of_pages - 1; // total page minus 1
 
-$staffs = select($offset, $total_records_per_page);
+$staffs = select($offset, $total_records_per_page); // select và phân trang
 $content = '';
 while ($row = mysqli_fetch_row($staffs)) {
   $content .= '<tr><td>' . $row[0] .
@@ -111,8 +111,11 @@ while ($row = mysqli_fetch_row($staffs)) {
       </div>
     </div>
   </div>
+  <!-- Pagination -->
   <ul class="pagination">
-    <?php if($page_no > 1){ echo "<li><a href='?page_no=1'>Trang đầu</a></li>"; } ?>
+    <?php if ($page_no > 1) {
+      echo "<li><a href='?page_no=1'>Trang đầu</a></li>";
+    } ?>
 
     <li <?php if ($page_no <= 1) {
       echo "class='disabled'";
