@@ -14,6 +14,8 @@ $ds_bo_mon = get_ds_bo_mon();
 $truong = '<option value="" disabled selected>Chọn một trường</option>';
 $khoa = '';
 $bo_mon = '';
+
+// Chained select
 while ($row = mysqli_fetch_row($ds_truong)) {
   if (isset($_GET["truong"]) && $row[0] == intval($_GET["truong"])) {
     $khoa_chained = $row[0];
@@ -43,23 +45,26 @@ while ($row = mysqli_fetch_row($ds_bo_mon)) {
   }
 }
 
+// Lấy mã cán bộ
 $count = intval(mysqli_fetch_row(count_CB())[0]);
 $count++;
+
+// Tạp cán bộ
 if (isset($_POST["create"])) {
   $c_name = $_POST["name"];
   $c_truong = $_POST["truong"];
   $c_khoa = isset($_POST["khoa"]) ? $_POST["khoa"] : null;
   $c_bo_mon = isset($_POST["bo_mon"]) ? $_POST["bo_mon"] : null;
 
-  if (isset($c_name) && isset($c_truong)) {
-    if (isset($c_khoa) && isset($c_bo_mon)) {
+  if (isset($c_name) && isset($c_truong)) { // kiểm tra điều kiện tiên quyết
+    if (isset($c_khoa) && isset($c_bo_mon)) { // kiểm tra nếu có cả khoa và bộ môn
       $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',$c_khoa,$c_bo_mon)");
-    } else if (isset($c_khoa)) {
+    } else if (isset($c_khoa)) { // kiểm tra nếu chỉ có khoa
       $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',$c_khoa,nullcss/style.css)");
-    } else {
+    } else { // kiểm tra nếu không có khoa và bộ môn
       $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',null,null)");
     }
-    if ($c) {
+    if ($c) { // kiểm tra
       header("location:index.php");
       setcookie("success", "Hồ sơ cán bộ được tạo thành công!", time() + 1, "/", "", 0);
     } else {
