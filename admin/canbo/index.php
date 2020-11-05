@@ -29,12 +29,15 @@ $second_last = $total_no_of_pages - 1; // total page minus 1
 $staffs = select($offset, $total_records_per_page); // select và phân trang
 $content = '';
 while ($row = mysqli_fetch_row($staffs)) {
+  $ten_truong = (isset(mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong) ? mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong : "");
+  $ten_khoa = (isset(mysqli_fetch_object(get_ten_khoa($row[3]))->Ten_khoa) ? mysqli_fetch_object(get_ten_khoa($row[3]))->Ten_khoa : "");
+  $ten_bo_mon = (isset(mysqli_fetch_object(get_ten_bo_mon($row[4]))->Ten_bo_mon) ? mysqli_fetch_object(get_ten_bo_mon($row[4]))->Ten_bo_mon : "");
   $content .= '<tr><td>' . $row[0] .
       '</td><td>' . $row[1] .
-      '</td><td>' . (isset(mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong) ? mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong : "") .
-      '</td><td>' . (isset(mysqli_fetch_object(get_ten_khoa($row[3]))->Ten_khoa) ? mysqli_fetch_object(get_ten_khoa($row[3]))->Ten_khoa : "") .
-      '</td><td>' . (isset(mysqli_fetch_object(get_ten_bo_mon($row[4]))->Ten_bo_mon) ? mysqli_fetch_object(get_ten_bo_mon($row[4]))->Ten_bo_mon : "") .
-      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="edit.php?Ma_CB=' . $row[0] . '"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="destroy.php?Ma_CB=' . $row[0] . '"' . '>Xóa</a>' .
+      '</td><td>' . $ten_truong .
+      '</td><td>' . $ten_khoa .
+      '</td><td>' . $ten_bo_mon .
+      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="edit.php?Ma_CB=' . $row[0] . '&truong=' . $row[2] . '&khoa=' . $row[3] . '&bo_mon=' . $row[4] . '"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="destroy.php?Ma_CB=' . $row[0] . '"' . '>Xóa</a>' .
       '</td></tr>';
 }
 ?>
