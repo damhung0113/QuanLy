@@ -8,12 +8,14 @@ if (isset($_SESSION["loged_user"])) {
   header("Location: /QuanLy/index.php");
 }
 
+// Khởi tạo biến
 $ds_truong = get_ds_truong();
 $ds_khoa = get_ds_khoa();
 $ds_bo_mon = get_ds_bo_mon();
 $truong = '<option value="" disabled selected>Chọn một trường</option>';
 $khoa = '';
 $bo_mon = '';
+$ten_cb = isset($_GET["ten_cb"]) ? $_GET["ten_cb"] : '';
 
 // Chained select
 while ($row = mysqli_fetch_row($ds_truong)) {
@@ -26,7 +28,10 @@ while ($row = mysqli_fetch_row($ds_truong)) {
   }
 }
 while ($row = mysqli_fetch_row($ds_khoa)) {
-  if (isset($_GET["truong"])) {
+  if (isset($_GET["truong"]) && $_GET["truong"] != null) {
+    if (mysqli_fetch_row(get_ten_truong($_GET["truong"])) == null) { // Kiểm tra dữ liệu về trường
+      header("Location: /QuanLy/index.php");
+    }
     if ($khoa_chained == $row[2]) {
       if (isset($_GET["khoa"]) && $row[0] == intval($_GET["khoa"])) {
         $bo_mon_chained = $row[0];
@@ -38,7 +43,10 @@ while ($row = mysqli_fetch_row($ds_khoa)) {
   }
 }
 while ($row = mysqli_fetch_row($ds_bo_mon)) {
-  if (isset($_GET["khoa"])) {
+  if (isset($_GET["khoa"]) && $_GET["khoa"] != null) {
+    if (mysqli_fetch_row(get_ten_khoa($_GET["khoa"])) == null) { // Kiểm tra dữ liệu vê khoa
+      header("Location: /QuanLy/index.php");
+    }
     if ($bo_mon_chained == $row[2]) {
       $bo_mon .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
     }
@@ -60,7 +68,7 @@ if (isset($_POST["create"])) {
     if (isset($c_khoa) && isset($c_bo_mon)) { // kiểm tra nếu có cả khoa và bộ môn
       $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',$c_khoa,$c_bo_mon)");
     } else if (isset($c_khoa)) { // kiểm tra nếu chỉ có khoa
-      $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',$c_khoa,nullcss/style.css)");
+      $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',$c_khoa,null)");
     } else { // kiểm tra nếu không có khoa và bộ môn
       $c = mysqli_query($connect, "insert into can_bo (Ma_CB,Ho_ten,Ma_truong,Ma_khoa,Ma_bo_mon) values ('$count','$c_name','$c_truong',null,null)");
     }
@@ -88,13 +96,15 @@ if (isset($_POST["create"])) {
   <script language=JavaScript>
       function reloadTruong(form) {
           const val = form.truong.options[form.truong.options.selectedIndex].value;
-          self.location = 'create.php?truong=' + val;
+          const val_ten_cb = form.name.value;
+          self.location = 'create.php?truong=' + val + '&ten_cb=' + val_ten_cb;
       }
 
       function reloadKhoa(form) {
           const val = form.truong.options[form.truong.options.selectedIndex].value;
           const val2 = form.khoa.options[form.khoa.options.selectedIndex].value;
-          self.location = 'create.php?truong=' + val + '&khoa=' + val2;
+          const val_ten_cb = form.name.value;
+          self.location = 'create.php?truong=' + val + '&khoa=' + val2 + '&ten_cb=' + val_ten_cb;
       }
   </script>
 </head>
@@ -133,8 +143,8 @@ if (isset($_POST["create"])) {
                 </div>
                 <div class="form-group">
                   <label for="name">Họ tên cán bộ</label>
-                  <input required type="text" class="form-control rounded-0" name="name"
-                         id="name" aria-label="" placeholder="Nhập họ và tên...">
+                  <?php echo '<input required type="text" class="form-control rounded-0" name="name" 
+                                id="name" aria-label="" placeholder="Nhập họ và tên..." value="' . $ten_cb . '">'; ?>
                 </div>
                 <button type="submit" name="create" class="btn btn-primary btn float-right"
                         id="">

@@ -36,66 +36,9 @@ while ($row = mysqli_fetch_row($users)) {
   <?php
   include_once("/opt/lampp/htdocs/QuanLy/header.php");
   ?>
-  <div class="main">
-    <div class="row mt-5">
-      <div class="col-12 box-content">
-        <div class="d-flex justify-content-between">
-          <h4>Danh sách người dùng</h4>
-          <a class="btn btn-primary mr-2" href="create.php" role="button">Thêm</a>
-        </div>
-        <table
-            class="mt-3 table-border"
-            id="table"
-            data-filter-control="true"
-            data-pagination="true">
-          <thead>
-          <tr>
-            <th class="nbgr" data-field="tendangnhap" data-filter-control="input" data-sortable="true"
-                data-filter-control-placeholder="Tên đăng nhập">Tên đăng nhập
-            </th>
-            <th class="nbgr" data-field="vaitro" data-filter-control="input"
-                data-filter-control-placeholder="Vai trò">
-              Vai trò
-            </th>
-            <th class="action" data-field="hanhdong" data-formatter="action_formatter"></th>
-          </tr>
-          </thead>
-        </table>
-      </div>
-    </div>
-  </div>
   <?php
   include_once("/opt/lampp/htdocs/QuanLy/footer.php");
   ?>
 </div>
 </body>
 </html>
-
-<style rel="stylesheet">
-	.action {
-		width: 170px !important;
-	}
-
-	.nbgr .th-inner {
-		background: #4796CE;
-	}
-</style>
-
-<script lang="js">
-    const $table = $('#table');
-
-    $(function () {
-        let data = <?php echo json_encode($data) ?>
-
-            $table.bootstrapTable({data: data})
-    })
-
-    function action_formatter(value, row, index) {
-        return [
-            '<div class="d-flex justify-content-around">',
-            `<a class="btn btn-info" href="edit.php?tendangnhap=${row.tendangnhap}&vaitro=${row.vaitro}">Sửa</a>`,
-            `<a class="btn btn-danger" href="destroy.php?tendangnhap=${row.tendangnhap}" role="button" methods="DELETE"" role="button">Xóa</a>`,
-            '</div>'
-        ].join('')
-    }
-</script>

@@ -12,7 +12,6 @@ if (isset($_POST["chinhsua"])) {
     $user_name = $_GET["tendangnhap"];
     $role = $_POST["role"];
     if ($user_name != $_GET["tendangnhap"]) {
-        echo 123;
         header("location:edit.php?tendangnhap=" . $_GET["tendangnhap"] . "&vaitro" . $_GET["vaitro"]);
         setcookie("error", "Sửa tài khoản không thành công!", time() + 1, "/", "", 0);
     } else {
