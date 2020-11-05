@@ -1,11 +1,11 @@
 <?php
-include "/opt/lampp/htdocs/QuanLy/connect.php";
+include "../../connect.php";
 include "./query.php";
-include "/opt/lampp/htdocs/QuanLy/alert.php";
+include "../../alert.php";
 global $connect;
 
 if (isset($_SESSION["loged_user"])) {
-    header("Location: /opt/lampp/htdocs/QuanLy/index.php");
+    header("Location: /QuanLy/index.php");
 }
 
 if (isset($_POST["chinhsua"])) {

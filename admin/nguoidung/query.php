@@ -1,5 +1,5 @@
 <?php
-include "/opt/lampp/htdocs/QuanLy/connect.php";
+include "../../connect.php";
 
 function select()
 {

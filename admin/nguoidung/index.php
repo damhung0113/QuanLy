@@ -1,11 +1,11 @@
 <?php
-include "/opt/lampp/htdocs/QuanLy/connect.php";
-include "/opt/lampp/htdocs/QuanLy/alert.php";
+include "../../connect.php";
+include "../../alert.php";
 include "./query.php";
 global $connect;
 global $data;
 if (isset($_SESSION["loged_user"])) {
-  header("Location: /opt/lampp/htdocs/QuanLy/index.php");
+  header("Location: /QuanLy/index.php");
 }
 
 $users = select();
@@ -34,10 +34,10 @@ while ($row = mysqli_fetch_row($users)) {
 <body>
 <div class="container-cus">
   <?php
-  include_once("/opt/lampp/htdocs/QuanLy/header.php");
+  include_once("../../header.php");
   ?>
   <?php
-  include_once("/opt/lampp/htdocs/QuanLy/footer.php");
+  include_once("../../footer.php");
   ?>
 </div>
 </body>

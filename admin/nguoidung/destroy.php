@@ -1,5 +1,5 @@
 <?php
-include "/opt/lampp/htdocs/QuanLy/connect.php";
+include "../../connect.php";
 include "./query.php";
 
 if (isset($_SESSION["loged_user"])) {

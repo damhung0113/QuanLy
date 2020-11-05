@@ -1,11 +1,55 @@
 <?php
-include "/opt/lampp/htdocs/QuanLy/connect.php";
-include "/opt/lampp/htdocs/QuanLy/alert.php";
+include "../../connect.php";
+include "../../alert.php";
 include "./query.php";
 global $connect;
-global $data;
 if (isset($_SESSION["loged_user"])) {
-  header("Location: /opt/lampp/htdocs/QuanLy/index.php");
+  header("Location: /QuanLy/index.php");
+}
+
+// Khởi tạo biến
+$ds_truong = get_ds_truong();
+$ds_khoa = get_ds_khoa();
+$ds_bo_mon = get_ds_bo_mon();
+$truong = '<option value="" disabled selected>Chọn một trường</option>';
+$khoa = '';
+$bo_mon = '';
+$ten_cb = isset($_GET["ten_cb"]) ? $_GET["ten_cb"] : '';
+
+// Chained select
+while ($row = mysqli_fetch_row($ds_truong)) {
+  if (isset($_GET["truong"]) && $row[0] == intval($_GET["truong"])) {
+    $khoa_chained = $row[0];
+    $khoa .= '<option value="" disabled selected>Chọn một khoa</option>';
+    $truong .= '<option value = "' . $row[0] . '" selected>' . $row[1] . '</option>';
+  } else {
+    $truong .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+  }
+}
+while ($row = mysqli_fetch_row($ds_khoa)) {
+  if (isset($_GET["truong"]) && $_GET["truong"] != null) {
+    if (mysqli_fetch_row(get_ten_truong($_GET["truong"])) == null) { // Kiểm tra dữ liệu về trường
+      header("Location: /QuanLy/index.php");
+    }
+    if ($khoa_chained == $row[2]) {
+      if (isset($_GET["khoa"]) && $row[0] == intval($_GET["khoa"])) {
+        $bo_mon_chained = $row[0];
+        $khoa .= '<option value = "' . $row[0] . '" selected>' . $row[1] . '</option>';
+      } else {
+        $khoa .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+      }
+    }
+  }
+}
+while ($row = mysqli_fetch_row($ds_bo_mon)) {
+  if (isset($_GET["khoa"]) && $_GET["khoa"] != null) {
+    if (mysqli_fetch_row(get_ten_khoa($_GET["khoa"])) == null) { // Kiểm tra dữ liệu vê khoa
+      header("Location: /QuanLy/index.php");
+    }
+    if ($bo_mon_chained == $row[2]) {
+      $bo_mon .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+    }
+  }
 }
 
 // Chức năng phân trang
@@ -25,8 +69,12 @@ $total_records = mysqli_fetch_array($result_count);
 $total_records = $total_records['total_records'];
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
 $second_last = $total_no_of_pages - 1; // total page minus 1
-
-$staffs = select($offset, $total_records_per_page); // select và phân trang
+if (isset($_GET["ten_cb"])) {
+  is_null($_GET["ten_cb"]) ? null : $_GET["ten_cb"];
+  $staffs = search($_GET["ten_cb"], $offset, $total_records_per_page); // Tìm kiếm và phân trang
+} else {
+  $staffs = select($offset, $total_records_per_page); // select và phân trang
+}
 $content = '';
 while ($row = mysqli_fetch_row($staffs)) {
   $ten_truong = (isset(mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong) ? mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong : "");
@@ -54,11 +102,26 @@ while ($row = mysqli_fetch_row($staffs)) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <link rel="shortcut icon" href="/QuanLy/images/favicon.ico" type="image/x-icon"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script language=JavaScript>
+      function reloadTruong(form) {
+          const val = form.truong.options[form.truong.options.selectedIndex].value;
+          const val_ten_cb = form.name.value;
+          self.location = 'index.php?truong=' + val + '&ten_cb=' + val_ten_cb;
+      }
+
+      function reloadKhoa(form) {
+          const val = form.truong.options[form.truong.options.selectedIndex].value;
+          const val2 = form.khoa.options[form.khoa.options.selectedIndex].value;
+          const val_ten_cb = form.name.value;
+          self.location = 'index.php?truong=' + val + '&khoa=' + val2 + '&ten_cb=' + val_ten_cb;
+      }
+  </script>
 </head>
 <body>
 <div class="container-cus">
   <?php
-  include_once("/opt/lampp/htdocs/QuanLy/header.php");
+  include_once("../../header.php");
   ?>
   <div class="main py-4">
     <div class="row justify-content-center">
@@ -69,23 +132,33 @@ while ($row = mysqli_fetch_row($staffs)) {
         <form action="" method="get">
           <div class="row">
             <div class="col-12 col-md-4">
-              <input type="text" class="form-control" placeholder="Họ và tên cán bộ" aria-label="">
+              <?php echo '<input type="text" class="form-control" name="ten_cb" placeholder="Họ và tên cán bộ" aria-label="" value="' . $ten_cb . '">'; ?>
             </div>
             <div class="col-12 col-md-4">
-              <button class="btn btn-primary" type="submit" name="search">Tìm</button>
+              <button class="btn btn-primary" type="submit">Tìm kiếm</i></button>
+              <a href="index.php" class="btn btn-default" type="submit"><b>X</b></i></a>
             </div>
           </div>
-          <!--          <div class="row mt-3">-->
-          <!--            <div class="col-12 col-md-2">-->
-          <!--              <select name="truong" id="truong"></select>-->
-          <!--            </div>-->
-          <!--            <div class="col-12 col-md-2">-->
-          <!--              <select name="khoa" id="khoa"></select>-->
-          <!--            </div>-->
-          <!--            <div class="col-12 col-md-2">-->
-          <!--              <select name="bomon" id="bomon"></select>-->
-          <!--            </div>-->
-          <!--          </div>-->
+          <div class="row mt-3">
+            <div class="col-12 col-md-2">
+              <select name="truong" id="truong" onchange="reloadTruong(this.form)" class="form-control">
+
+                <?php echo $truong; ?>
+              </select>
+            </div>
+            <div class="col-12 col-md-2">
+              <select name="khoa" id="khoa" onchange="reloadKhoa(this.form)" class="form-control">
+
+                <?php echo $khoa; ?>
+              </select>
+            </div>
+            <div class="col-12 col-md-2">
+              <select name="bomon" id="bomon" class="form-control">
+                <?php echo $bo_mon; ?>
+
+              </select>
+            </div>
+          </div>
         </form>
       </div>
       <div class="col-md-12">
@@ -192,7 +265,7 @@ while ($row = mysqli_fetch_row($staffs)) {
     } ?>
   </ul>
   <?php
-  include_once("/opt/lampp/htdocs/QuanLy/footer.php");
+  include_once("../../footer.php");
   ?>
 </div>
 </body>

@@ -1,5 +1,5 @@
 <?php
-include "/opt/lampp/htdocs/QuanLy/connect.php";
+include "../../connect.php";
 
 function select($offset, $total_records_per_page) {
   global $connect;
@@ -14,6 +14,11 @@ function get_ten_cb($ma_cb) {
 function destroy($ma_cb) {
   global $connect;
   return mysqli_query($connect, "delete from can_bo where Ma_CB = '$ma_cb'");
+}
+
+function search($ho_ten, $offset, $total_records_per_page) {
+  global $connect;
+  return mysqli_query($connect, "select * from can_bo where Ho_ten like '%$ho_ten%' order by Ho_ten limit $offset, $total_records_per_page");
 }
 
 function count_data() {
