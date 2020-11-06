@@ -121,7 +121,7 @@ if (!isset($_SESSION["loged_admin"]) && $_GET["act"] != "logout") {
               </a>
             </div>
             <div class="">
-              <a href="#">
+              <a href="./khenthuong/list_khenthuong.php">
                 <img src="../images/khen-thuong.png" alt="">
                 <div class="content-header">
                   Danh sách khen thưởng
