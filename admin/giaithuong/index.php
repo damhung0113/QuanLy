@@ -31,13 +31,6 @@ $total_no_of_pages = ceil($total_records / $total_records_per_page);
 $second_last = $total_no_of_pages - 1; // total page minus 1
 
 if (isset($_GET["ma_giai_thuong"])) {
-  is_null($_GET["ma_giai_thuong"]) ? null : $_GET["ma_giai_thuong"];
-  is_null($_GET["ten_giai_thuong"]) ? null : $_GET["ten_giai_thuong"];
-  is_null($_GET["loai_giai_thuong"]) ? null : $_GET["loai_giai_thuong"];
-  is_null($_GET["to_chuc_thuong"]) ? null : $_GET["to_chuc_thuong"];
-  is_null($_GET["to_chuc_trao_giai"]) ? null : $_GET["to_chuc_trao_giai"];
-  is_null($_GET["ngay_quyet_dinh_start"]) ? null : $_GET["ngay_quyet_dinh_start"];
-  is_null($_GET["ngay_quyet_dinh_end"]) ? null : $_GET["ngay_quyet_dinh_end"];
   $i_giai_thuong = filter($_GET["ma_giai_thuong"], $_GET["ho_ten"], $_GET["ten_giai_thuong"], $_GET["loai_giai_thuong"], $_GET["to_chuc_thuong"], $_GET["to_chuc_trao_giai"],
       $_GET["ngay_quyet_dinh_start"], $_GET["ngay_quyet_dinh_end"], $offset, $total_records_per_page); // Tìm kiếm và phân trang
 } else {
@@ -141,11 +134,13 @@ while ($row = mysqli_fetch_row($i_giai_thuong)) {
                 <td>
                   <select name="to_chuc_thuong" id="to_chuc_thuong" class="form-control">
                     <option value="">Chọn tổ chức thưởng</option>
-                    <option value="Trung ương">Trung ương</option>
-                    <option value="Địa phương">Địa phương</option>
-                    <option value="Tổ chức trong nước">Tổ chức trong nước</option>
-                    <option value="Tổ chức nước ngoài">Tổ chức nước ngoài</option>
-                    <option value="Quốc gia nước ngoài">Quốc gia nước ngoài</option>
+                    <?php
+                    echo '<option value="Trung ương" class=""' . (($_GET["to_chuc_thuong"] == "Trung ương") ? 'selected' : '') . '>Trung ương</option>';
+                    echo '<option value="Địa phương" class=""' . (($_GET["to_chuc_thuong"] == "Địa phương") ? 'selected' : '') . '>Địa phương</option>';
+                    echo '<option value="Tổ chức trong nước" class=""' . (($_GET["to_chuc_thuong"] == "Tổ chức trong nước") ? 'selected' : '') . '>Tổ chức trong nước</option>';
+                    echo '<option value="Tổ chức nước ngoài" class=""' . (($_GET["to_chuc_thuong"] == "Tổ chức nước ngoài") ? 'selected' : '') . '>Tổ chức nước ngoài</option>';
+                    echo '<option value="Quốc gia nước ngoài" class=""' . (($_GET["to_chuc_thuong"] == "Quốc gia nước ngoài") ? 'selected' : '') . '>Quốc gia nước ngoài</option>';
+                    ?>
                   </select>
                 </td>
                 <td><input type="text" name="to_chuc_trao_giai" class="form-control" placeholder="Tổ chức trao giải..."

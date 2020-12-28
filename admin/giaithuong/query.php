@@ -49,13 +49,13 @@ function get_ten_giai_thuong($ma_giai_thuong) {
 function filter($ma_giai_thuong, $ho_ten, $ten_giai_thuong, $loai_giai_thuong, $to_chuc_thuong, $to_chuc_trao_giai, $ngay_quyet_dinh_start, $ngay_quyet_dinh_end, $offset, $total_records_per_page) {
   global $connect;
   $where = "Ten like '%$ten_giai_thuong%' and To_chuc_thuong like '%$to_chuc_thuong%' and To_chuc_trao_giai like '%$to_chuc_trao_giai'";
-  if (!empty($loai_giai_thuong)) {
-    $where .= "and Loai_giai_thuong = '$loai_giai_thuong'";
+  if ($loai_giai_thuong !== "") {
+    $where .= "and Loai_giai_thuong = $loai_giai_thuong";
   }
-  if (!empty($ma_giai_thuong)) {
-    $where .= "and Ma_giai_thuong = '$ma_giai_thuong'";
+  if ($ma_giai_thuong !== "") {
+    $where .= "and Ma_giai_thuong = $ma_giai_thuong";
   }
-  if (!empty($ngay_quyet_dinh_start) && !empty($ngay_quyet_dinh_end)) {
+  if ($ngay_quyet_dinh_start !== "" && $ngay_quyet_dinh_end !== "") {
     $where .= "and Ngay_QD > '$ngay_quyet_dinh_start' and Ngay_QD < '$ngay_quyet_dinh_end'";
   }
   return mysqli_query($connect, "select * from giai_thuong where $where order by Ma_giai_thuong limit $offset, $total_records_per_page");

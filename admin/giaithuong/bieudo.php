@@ -122,7 +122,7 @@ include_once("../../footer.php");
             display: true,
             ticks: {
               min: 0,
-              callback: function(value) {if (value % 1 === 0) {return value;}}
+              callback: function(value) {if (value % 2 === 0) {return value;}}
             }
           }],
           xAxes: [{
