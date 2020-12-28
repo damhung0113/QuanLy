@@ -23,7 +23,7 @@ function destroy($ma_cb) {
 
 function count_data() {
   global $connect;
-  return mysqli_query($connect, "select COUNT(*) As total_records FROM loai_giai_thuong");
+  return mysqli_query($connect, "select COUNT(*) As total_records FROM giai_thuong");
 }
 
 function get_ds_danh_hieu() {
