@@ -7,19 +7,6 @@ if (isset($_SESSION["loged_user"])) {
   header("Location: /QuanLy/index.php");
 }
 
-// Khởi tạo biến
-$ds_danh_hieu = get_ds_danh_hieu();
-$danh_hieu = '<option value="" disabled selected>Chọn một danh hiệu</option>';
-$ten_cb = isset($_GET["ten_cb"]) ? $_GET["ten_cb"] : '';
-
-while ($row = mysqli_fetch_row($ds_danh_hieu)) {
-  if (isset($_GET["danh_hieu"]) && $row[0] == intval($_GET["danh_hieu"])) {
-    $danh_hieu .= '<option value = "' . $row[0] . '" selected>' . $row[1] . '</option>';
-  } else {
-    $danh_hieu .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
-  }
-}
-
 // Chức năng phân trang
 if (isset($_GET['page_no']) && $_GET['page_no'] != "") { // kiểm tra chỉ số trang hiện tại
   $page_no = $_GET['page_no'];
@@ -32,45 +19,26 @@ $offset = ($page_no - 1) * $total_records_per_page; // offset trong mysql
 $previous_page = $page_no - 1;
 $next_page = $page_no + 1;
 $adjacents = "2";
-$result_count = count_data(); // tổng số bản ghi
+$result_count = count_data_khoa(); // tổng số bản ghi
 $total_records = mysqli_fetch_array($result_count);
 $total_records = $total_records['total_records'];
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
 $second_last = $total_no_of_pages - 1; // total page minus 1
 
-if (isset($_GET["ma_qd"])) {
-  is_null($_GET["ho_ten"]) ? null : $_GET["ho_ten"];
-  is_null($_GET["ma_qd"]) ? null : $_GET["ma_qd"];
-  is_null($_GET["danh_hieu"]) ? null : $_GET["danh_hieu"];
-  is_null($_GET["ngay_quyet_dinh_start"]) ? null : $_GET["ngay_quyet_dinh_start"];
-  is_null($_GET["ngay_quyet_dinh_end"]) ? null : $_GET["ngay_quyet_dinh_end"];
-  is_null($_GET["so_qd"]) ? null : $_GET["so_qd"];
-  $titles = filter($_GET["ma_qd"], $_GET["ho_ten"], $_GET["danh_hieu"], $_GET["ngay_quyet_dinh_start"], $_GET["ngay_quyet_dinh_end"],
-      $_GET["so_qd"], $offset, $total_records_per_page); // Tìm kiếm và phân trang
-} else {
-  $titles = select($offset, $total_records_per_page); // select và phân trang
-}
+$ds_khoa = get_ds_khoa($offset, $total_records_per_page);
 $content = '';
-while ($row = mysqli_fetch_row($titles)) {
-  try {
-    $dt = new DateTime($row[3]);
-  } catch (Exception $e) {
-  }
-  $ten_can_bo = (isset(mysqli_fetch_object(get_ten_can_bo($row[1]))->Ho_ten) ? mysqli_fetch_object(get_ten_can_bo($row[1]))->Ho_ten : "");
-  $chien_si_thi_dua = (isset(mysqli_fetch_object(get_ten_chien_si_thi_dua($row[2]))->Ten_danh_hieu) ? mysqli_fetch_object(get_ten_chien_si_thi_dua($row[2]))->Ten_danh_hieu : "");
-  $content .= '<tr><td style="width: 50px">' . $row[0] .
-      '</td><td>' . $ten_can_bo .
-      '</td><td>' . $chien_si_thi_dua .
-      '</td><td>' . $dt->format('m-d-Y') .
-      '</td><td>' . $row[4] .
-      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="edit.php?Ma_danh_hieu=' . $row[0] . '&Ma_cb=' . $row[1] . '&Chien_si_thi_dua=' . $row[2] . '&Ngay=' . $row[3] . '&So_qd=' . $row[4] . '"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="destroy.php?Ma_danh_hieu=' . $row[0] . '"' . '>Xóa</a>' .
+while ($row = mysqli_fetch_row($ds_khoa)) {
+  $content .= '<tr><td>' . $row[0] .
+      '</td><td>' . $row[1] .
+      '</td><td>' . mysqli_fetch_object(get_ten_truong($row[2]))->Ten_truong .
+      '</td><td class="text-center">' . '<a class="btn btn-success mr-3" type="button" href="#"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="#"' . '>Xóa</a>' .
       '</td></tr>';
 }
 ?>
 
 <html lang="vi">
 <head>
-  <title>Quản Lý Danh Hiệu Thi Đua</title>
+  <title>Quản Lý Khoa</title>
   <meta charset="utf-8">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -90,61 +58,59 @@ while ($row = mysqli_fetch_row($titles)) {
     <div class="col-md-10 row container-cus pl-5">
       <div class="col-md-12">
         <div class="title_chart" style="width: 25%">
-          <span class="text-uppercase">QUẢN LÝ DANH HIỆU THI ĐUA</span>
+          <span class="text-uppercase">Danh sách khoa</span>
           <span class="arrow_chart"></span>
         </div>
         <div class="card">
           <div class="card-header">
-            <a href="create.php" class="btn btn-outline-primary float-right" role="button"
-               style="border-color: #007bff;">Tạo mới danh hiệu thi đua</a>
+            <a href="create_khoa.php" class="btn btn-outline-primary float-right" role="button"
+               style="border-color: #007bff;">Tạo mới khoa</a>
           </div>
           <div class="table-responsive">
             <table class="table table-bordered table-striped">
               <thead>
               <tr style="color:White;background-color:#006699;font-weight:bold;">
-                <th scope="col" style="width: 50px;">Mã danh hiệu</th>
-                <th scope="col">Họ và tên</th>
-                <th scope="col">Chiến sĩ thi đua</th>
-                <th scope="col" style="width: 100px;">Ngày trao</th>
-                <th scope="col">Số quyết định</th>
-                <th style="width: 10%;"></th>
+                <th scope="col">Mã khoa</th>
+                <th scope="col">Tên khoa</th>
+                <th scope="col">Tên trường</th>
+                <th style="width: 80px;"></th>
               </tr>
               </thead>
               <tbody>
               <form>
-                <td><input type="text" name="ma_qd" class="form-control" placeholder="Mã QĐ..."
-                           style="width: 50px" value="<?php echo isset($_GET["ma_qd"]) ? $_GET["ma_qd"] : null; ?>">
-                </td>
-                <td><input type="text" name="ho_ten" class="form-control" placeholder="Họ và tên..."
-                           value="<?php echo isset($_GET["ho_ten"]) ? $_GET["ho_ten"] : null; ?>"></td>
-                <td><?php
-                  $ds_danh_hieu_filter = get_ds_danh_hieu();
-                  echo '<select name="danh_hieu" class="form-control">';
-                  echo '<option value="">Chọn một danh hiệu...</option>';
-                  while ($row = mysqli_fetch_row($ds_danh_hieu_filter)) {
-                    if ($row[0] == $_GET["danh_hieu"]) {
+                <td><input type="text" name="ma_truong" class="form-control" placeholder="Mã trường..."
+                           value="<?php echo isset($_GET["ma_truong"]) ? $_GET["ma_truong"] : null; ?>"></td>
+                <td>
+                  <?php
+                  $ds_khoa_filter = get_ds_khoa_filter();
+                  echo '<select name="khoa" class="form-control">';
+                  echo '<option value="">Chọn một khoa...</option>';
+                  while ($row = mysqli_fetch_row($ds_khoa_filter)) {
+                    if ($row[0] == $_GET["khoa"]) {
                       echo '<option value="' . $row[0] . '" selected>' . $row[1] . '</option>';
                     } else {
                       echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
                     }
                   }
                   echo '</select>';
-                  ?></td>
-                <td style="width: 100px;">
-                  <input placeholder="Ngày BĐ" name="ngay_quyet_dinh_start" class="form-control"
-                         style="height: 20px; font-size: 10px" type="text" onfocus="(this.type='date')"
-                         onblur="(this.type='text')"
-                         id="date"
-                         value="<?php echo isset($_GET["ngay_quyet_dinh_start"]) ? $_GET["ngay_quyet_dinh_start"] : null; ?>"/>
-                  <input placeholder="Ngày KT" name="ngay_quyet_dinh_end" class="form-control mt-1"
-                         style="height: 20px; font-size: 10px" type="text" onfocus="(this.type='date')"
-                         onblur="(this.type='text')"
-                         id="date"
-                         value="<?php echo isset($_GET["ngay_quyet_dinh_end"]) ? $_GET["ngay_quyet_dinh_end"] : null; ?>"/>
+                  ?>
                 </td>
-                <td><input type="text" name="so_qd" class="form-control" placeholder="Số quyết định..."
-                           value="<?php echo isset($_GET["so_qd"]) ? $_GET["so_qd"] : null; ?>"></td>
-                <td class="d-flex">
+                <td>
+                  <?php
+                  $ds_truong_filter = get_ds_truong_filter();
+                  echo '<select name="truong" class="form-control">';
+                  echo '<option value="">Chọn một trường...</option>';
+                  while ($row = mysqli_fetch_row($ds_truong_filter)) {
+                    if ($row[0] == $_GET["truong"]) {
+                      echo '<option value="' . $row[0] . '" selected>' . $row[1] . '</option>';
+                    } else {
+                      echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
+                    }
+                  }
+                  echo '</select>';
+                  ?>
+                </td>
+                <td class="text-center" style="width: 80px;">
                   <button type="submit" class="btn btn-info">Search</button>
                   <a href="index.php" class="btn btn-secondary ml-3">Reset</a>
                 </td>
@@ -239,9 +205,3 @@ while ($row = mysqli_fetch_row($titles)) {
 </div>
 </body>
 </html>
-
-<!--<script>-->
-<!--    $("#close-sidebar").click(function () {-->
-<!--        $(".page-wrapper").removeClass("toggled")-->
-<!--    })-->
-<!--</script>-->

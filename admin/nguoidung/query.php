@@ -28,3 +28,8 @@ function edit($user_name, $role) {
     global $connect;
     return mysqli_query($connect, "update nguoi_dung set Vai_tro = '$role' where Ten_dang_nhap = '$user_name'") or die;
 }
+
+function count_data() {
+  global $connect;
+  return mysqli_query($connect, "select COUNT(*) As total_records FROM nguoi_dung");
+}

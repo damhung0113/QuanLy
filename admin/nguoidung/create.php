@@ -50,6 +50,9 @@ if (isset($_POST["dangky"])) {
             <div class="card-header">
               <h3 class="mb-0 text-center">Tạo tài khoản</h3>
             </div>
+            <div class="card-header">
+              <a href="index.php" class="btn btn-outline-primary float-right">Trở về trang danh sách</a>
+            </div>
             <div class="card-body">
               <form class="form" role="form" autocomplete="off" id="formLogin" novalidate=""
                     method="POST">
@@ -64,7 +67,7 @@ if (isset($_POST["dangky"])) {
                          placeholder="Nhập mật khẩu...">
                 </div>
                 <div class="form-group">
-                  <label for="pwd">Mật khẩu</label>
+                  <label for="pwd">Nhập lại mật khẩu</label>
                   <input required type="password" class="form-control rounded-0" name="pass2"
                          placeholder="Nhập mật khẩu...">
                 </div>
@@ -72,7 +75,7 @@ if (isset($_POST["dangky"])) {
 
                   <label for="role">Vai trò:</label>
 
-                  <select id="role" name="role">
+                  <select id="role" name="role" class="form-control">
                     <option value="0">Người quản lý</option>
                     <option value="1">Trưởng đơn vị (Cấp Đại học Quốc gia)</option>
                     <option value="2">Trưởng đơn vị (Cấp trường)</option>

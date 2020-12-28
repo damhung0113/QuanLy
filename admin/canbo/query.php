@@ -16,9 +16,22 @@ function destroy($ma_cb) {
   return mysqli_query($connect, "delete from can_bo where Ma_CB = '$ma_cb'");
 }
 
-function search($ho_ten, $offset, $total_records_per_page) {
+function filter($macb, $ho_ten, $truong, $khoa, $bo_mon, $offset, $total_records_per_page) {
   global $connect;
-  return mysqli_query($connect, "select * from can_bo where Ho_ten like '%$ho_ten%' order by Ho_ten limit $offset, $total_records_per_page");
+  $where = "Ho_ten like '%$ho_ten%'";
+  if (!empty($macb)) {
+    $where .= "and Ma_CB = '$macb'";
+  }
+  if (!empty($truong)) {
+    $where .= "and Ma_truong = '$truong'";
+  }
+  if (!empty($khoa)) {
+    $where .= "and Ma_khoa = '$khoa'";
+  }
+  if (!empty($bo_mon)) {
+    $where .= "and Ma_bo_mon = '$bo_mon'";
+  }
+  return mysqli_query($connect, "select * from can_bo where $where order by Ho_ten limit $offset, $total_records_per_page");
 }
 
 function count_data() {

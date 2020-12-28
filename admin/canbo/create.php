@@ -54,7 +54,7 @@ while ($row = mysqli_fetch_row($ds_bo_mon)) {
 }
 
 // Lấy mã cán bộ
-$count = intval(mysqli_fetch_row(count_CB())[0]);
+$count = is_null(mysqli_fetch_row(count_CB())) ? 0 : intval(mysqli_fetch_row(count_CB())[0]);
 $count++;
 
 // Tạp cán bộ

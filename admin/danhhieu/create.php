@@ -11,30 +11,38 @@ if (isset($_SESSION["loged_user"])) {
 $ds_danh_hieu = get_ds_danh_hieu();
 $danh_hieu = '<option value="" disabled selected>Chọn danh hiệu</option>';
 
+// Lấy tên cán bộ
+$ten_cb = "";
+$ma_cb = "";
+if (isset($_GET["ma_cb"])) {
+  $ma_cb = is_null($_GET["ma_cb"]) ? null : $_GET["ma_cb"];
+  $ten_cb = is_null(mysqli_fetch_row(get_ten_can_bo($ma_cb))) ? "Không tìm thấy cán bộ" : mysqli_fetch_row(get_ten_can_bo($ma_cb))[1];
+}
+
 while ($row = mysqli_fetch_row($ds_danh_hieu)) {
   if (isset($_GET["danh_hieu_thi_dua"]) && $row[0] == intval($_GET["danh_hieu_thi_dua"])) {
-      $danh_hieu .= '<option value = "' . $row[0] . '" selected>' . $row[1] . '</option>';
+    $danh_hieu .= '<option value = "' . $row[0] . '" selected>' . $row[1] . '</option>';
   } else {
-      $danh_hieu .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
+    $danh_hieu .= '<option value = "' . $row[0] . '">' . $row[1] . '</option>';
   }
 }
 
 // Lấy mã danh hiệu
-$count = intval(mysqli_fetch_row(count_danh_hieu())[0]);
+$count = is_null(mysqli_fetch_row(count_danh_hieu())) ? 0 : intval(mysqli_fetch_row(count_danh_hieu())[0]);
 $count++;
 
 // Tạp mới danh hiệu thi đua
 if (isset($_POST["create"])) {
-  $c_ma_cb = $_POST["ma_can_bo"];
+  $c_ma_cb = $_POST["ma_cb"];
   $c_chien_si_thi_dua = $_POST["danh_hieu"];
-  $c_ngay = isset($_POST["ngay"]) ? $_POST["ngay"] : null;
-  $c_so_qd = isset($_POST["so_qd"]);
+  $c_ngay = isset($_POST["ngay_qd"]) ? $_POST["ngay_qd"] : null;
+  $c_so_qd = $_POST["so_qd"];
 
   if (isset($c_ma_cb) && isset($c_chien_si_thi_dua) && isset($c_so_qd)) { // kiểm tra điều kiện tiên quyết
     if (isset($c_ngay)) {
-        $c = mysqli_query($connect, "INSERT INTO danh_hieu_thi_dua (Ma_danh_hieu, Ma_CB, Chien_si_thi_dua, Ngay, So_QD) VALUES ('$count','$c_ma_cb','$c_chien_si_thi_dua',$c_ngay,$c_so_qd)");
+      $c = mysqli_query($connect, "INSERT INTO danh_hieu_thi_dua (Ma_danh_hieu, Ma_CB, Chien_si_thi_dua, Ngay, So_QD) VALUES ('$count','$c_ma_cb','$c_chien_si_thi_dua','$c_ngay','$c_so_qd')");
     } else {
-        $c = mysqli_query($connect, "INSERT INTO danh_hieu_thi_dua (Ma_danh_hieu, Ma_CB, Chien_si_thi_dua, Ngay, So_QD) VALUES ('$count','$c_ma_cb','$c_chien_si_thi_dua',null ,$c_so_qd)");
+      $c = mysqli_query($connect, "INSERT INTO danh_hieu_thi_dua (Ma_danh_hieu, Ma_CB, Chien_si_thi_dua, Ngay, So_QD) VALUES ('$count','$c_ma_cb','$c_chien_si_thi_dua',null ,'$c_so_qd')");
     }
     if ($c) { // kiểm tra
       header("location:index.php");
@@ -57,11 +65,11 @@ if (isset($_POST["create"])) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-  <script language=JavaScript>
-      function reloadDanhHieu(form) {
-          const val = form.$danh_hieu.options[form.$danh_hieu.options.selectedIndex].value;
-          self.location = 'create.php?$danh_hieu=' + val;
-      }
+  <script lang="javascript">
+    function get_ten_cb(form) {
+      const ma_cb = form.ma_cb.value;
+      self.location = 'create.php?ma_cb=' + ma_cb;
+    }
   </script>
 </head>
 <body>
@@ -79,25 +87,37 @@ if (isset($_POST["create"])) {
             </div>
             <div class="card-body">
               <form class="form" role="form" autocomplete="off" id="" novalidate="" method="POST">
+                <div class="form-group row">
+                  <div class="col-3">
+                    <label for="ma_cb">Mã cán bộ</label>
+                    <?php echo '<input required type="text" class="form-control rounded-0" name="ma_cb" onchange="get_ten_cb(this.form)"
+                           id="ma_cb" aria-label="" placeholder="Nhập mã cán bộ..." value="' . $ma_cb . '">' ?>
+                  </div>
+                  <!--                  <div class="col-3"></div>-->
+                  <div class="col-6">
+                    <label for="ten_can_bo">Tên cán bộ</label>
+                    <?php echo '<input type="text" class="form-control" id="ten_can_bo" aria-label="" placeholder="" disabled value="' . $ten_cb . '">' ?>
+                  </div>
+                </div>
                 <div class="form-group">
                   <label for="danh_hieu">Danh hiệu</label>
-                  <select id="danh_hieu" name="danh_hieu" onchange="reloadDanhHieu(this.form)" class="form-control">
+                  <select id="danh_hieu" name="danh_hieu" class="form-control" required>
                     <?php echo $danh_hieu; ?>
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="ma_can_bo">Mã cán bộ</label>
-                  <input required type="text" class="form-control rounded-0" name="ma_can_bo"
-                         id="ma_can_bo" aria-label="" placeholder="Nhập mã cán bộ...">
+                  <label for="ngay_qd">Ngày quyết định</label>
+                  <input required type="date" class="form-control" name="ngay_qd"
+                         id="ngay_qd" aria-label="" style="width: 250px;">
                 </div>
                 <div class="form-group">
-                  <label for="ma_qd">Mã quyết định</label>
-                  <input required type="text" class="form-control rounded-0" name="ma_qd"
-                         id="ma_qd" aria-label="" placeholder="Nhập mã quyết định...">
+                  <label for="so_qd">Số quyết định</label>
+                  <input required type="text" class="form-control" name="so_qd"
+                         id="so_qd" aria-label="" placeholder="Nhập số quyết định">
                 </div>
                 <button type="submit" name="create" class="btn btn-primary btn float-right"
                         id="">
-                    Thêm mới quyết định trao danh hiệu thi đua
+                  Thêm mới quyết định trao danh hiệu thi đua
                 </button>
               </form>
             </div>
@@ -109,3 +129,7 @@ if (isset($_POST["create"])) {
 </form>
 </body>
 </html>
+
+<!--<script>-->
+<!--  $('#so_qd').val('QD' + Math.floor((Math.random() * 9) + 1) + '' + Math.floor((Math.random() * 9) + 1) + '' + Math.floor((Math.random() * 9) + 1)  + '' + Math.floor((Math.random() * 9) + 1))-->
+<!--</script>-->

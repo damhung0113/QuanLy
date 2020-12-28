@@ -6,10 +6,10 @@ if (isset($_SESSION["loged_user"])) {
   header("Location: /QuanLy/index.php");
 }
 
-if (destroy($_GET["Ma_danh_hieu"])) {
+if (destroy($_GET["Ma_CB"])) {
     header("Location:index.php");
-    setcookie("success", "Xóa danh hiệu thành công!", time() + 1, "/", "", 0);
+    setcookie("success", "Xóa cán bộ thành công!", time() + 1, "/", "", 0);
 } else {
     header("Location:index.php");
-    setcookie("error", "Xóa danh hiệu không thành công!", time() + 1, "/", "", 0);
+    setcookie("error", "Xóa cán bộ không thành công!", time() + 1, "/", "", 0);
 }
