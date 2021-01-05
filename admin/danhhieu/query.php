@@ -39,13 +39,13 @@ function destroy($ma_danh_hieu) {
 function filter($ma_qd, $ho_ten, $danh_hieu, $ngay_quyet_dinh_start, $ngay_quyet_dinh_end, $so_qd, $offset, $total_records_per_page) {
   global $connect;
   $where = "So_QD like '%$so_qd%'";
-  if (!empty($ma_qd)) {
+  if ($ma_qd !== "") {
     $where .= "and Ma_danh_hieu = '$ma_qd'";
   }
-  if (!empty($danh_hieu)) {
+  if ($danh_hieu !== "") {
     $where .= "and Chien_si_thi_dua = '$danh_hieu'";
   }
-  if (!empty($ngay_quyet_dinh_start) && !empty($ngay_quyet_dinh_end)) {
+  if ($ngay_quyet_dinh_start !== "" && $ngay_quyet_dinh_end !== "") {
     $where .= "and Ngay > '$ngay_quyet_dinh_start' and Ngay < '$ngay_quyet_dinh_end'";
   }
   return mysqli_query($connect, "select * from danh_hieu_thi_dua where $where order by Ma_danh_hieu limit $offset, $total_records_per_page");

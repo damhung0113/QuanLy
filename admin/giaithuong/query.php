@@ -16,9 +16,9 @@ function get_loai_giai_thuong() {
   return mysqli_query($connect, "select * from loai_giai_thuong");
 }
 
-function destroy($ma_cb) {
+function destroy($ma_giai_thuong) {
   global $connect;
-  return mysqli_query($connect, "delete from can_bo where Ma_CB = '$ma_cb'");
+  return mysqli_query($connect, "delete from giai_thuong where Ma_giai_thuong = '$ma_giai_thuong'");
 }
 
 function count_data() {

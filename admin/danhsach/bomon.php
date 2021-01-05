@@ -19,7 +19,7 @@ $offset = ($page_no - 1) * $total_records_per_page; // offset trong mysql
 $previous_page = $page_no - 1;
 $next_page = $page_no + 1;
 $adjacents = "2";
-$result_count = count_data_truong(); // tổng số bản ghi
+$result_count = count_data_bo_mon(); // tổng số bản ghi
 $total_records = mysqli_fetch_array($result_count);
 $total_records = $total_records['total_records'];
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
@@ -47,7 +47,6 @@ while ($row = mysqli_fetch_row($ds_bo_mon)) {
   <link rel="stylesheet" href="/QuanLy/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="shortcut icon" href="/QuanLy/images/favicon.ico" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -78,38 +77,8 @@ while ($row = mysqli_fetch_row($ds_bo_mon)) {
               </thead>
               <tbody>
               <form>
-                <td><input type="text" name="ma_truong" class="form-control" placeholder="Mã trường..."
-                           value="<?php echo isset($_GET["ma_truong"]) ? $_GET["ma_truong"] : null; ?>"></td>
-                <td>
-                  <?php
-                  $ds_khoa_filter = get_ds_khoa_filter();
-                  echo '<select name="khoa" class="form-control">';
-                  echo '<option value="">Chọn một bộ môn...</option>';
-                  while ($row = mysqli_fetch_row($ds_khoa_filter)) {
-                    if ($row[0] == $_GET["khoa"]) {
-                      echo '<option value="' . $row[0] . '" selected>' . $row[1] . '</option>';
-                    } else {
-                      echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
-                    }
-                  }
-                  echo '</select>';
-                  ?>
-                </td>
-<!--                <td>-->
-<!--                  --><?php
-//                  $ds_truong_filter = get_ds_truong_filter();
-//                  echo '<select name="truong" class="form-control">';
-//                  echo '<option value="">Chọn một trường...</option>';
-//                  while ($row = mysqli_fetch_row($ds_truong_filter)) {
-//                    if ($row[0] == $_GET["truong"]) {
-//                      echo '<option value="' . $row[0] . '" selected>' . $row[1] . '</option>';
-//                    } else {
-//                      echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
-//                    }
-//                  }
-//                  echo '</select>';
-//                  ?>
-<!--                </td>-->
+                <td></td>
+                <td></td>
                 <td>
                   <?php
                   $ds_bo_mon_filter = get_ds_bo_mon_filter();
@@ -127,7 +96,7 @@ while ($row = mysqli_fetch_row($ds_bo_mon)) {
                 </td>
                 <td class="text-center" style="width: 80px;">
                   <button type="submit" class="btn btn-info">Search</button>
-                  <a href="index.php" class="btn btn-secondary ml-3">Reset</a>
+                  <a href="bomon.php" class="btn btn-secondary ml-3">Reset</a>
                 </td>
               </form>
               <?php echo $content; ?>

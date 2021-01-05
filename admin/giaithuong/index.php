@@ -52,7 +52,16 @@ while ($row = mysqli_fetch_row($i_giai_thuong)) {
       '</td><td>' . $row[5] .
       '</td><td>' . $dt->format('Y-m-d') .
       '</td><td>' . $row[7] .
-      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="#"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="destroy.php?Ma_CB=' . $row[0] . '"' . '>Xóa</a>' .
+      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="edit.php?ma_giai_thuong=' . $row[0] .
+      '&ma_cb=' . $row[1] .
+      '&ten=' . $row[2] .
+      '&loai_giai_thuong=' . $row[3] .
+      '&to_chuc_thuong=' . $row[4] .
+      '&to_chuc_trao_giai=' . $row[5] .
+      '&ngay_qd=' . $dt->format('Y-m-d') .
+      '&dien_giai=' . $row[7] .
+      '"' . '>Sửa</a>' .
+      '<a class="btn btn-danger" type="button" href="destroy.php?ma_giai_thuong=' . $row[0] . '"' . '>Xóa</a>' .
       '</td></tr>';
 }
 ?>
@@ -68,10 +77,7 @@ while ($row = mysqli_fetch_row($i_giai_thuong)) {
   <link rel="stylesheet" href="/QuanLy/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="shortcut icon" href="/QuanLy/images/favicon.ico" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
 </head>
 <body>
 <?php include_once("../../header.php"); ?>
@@ -105,15 +111,14 @@ while ($row = mysqli_fetch_row($i_giai_thuong)) {
             </thead>
             <tbody>
             <form>
-              <tr>
-                <td><input type="text" name="ma_giai_thuong" class="form-control" placeholder="Mã giải thưởng..."
+                <td><input type="text" name="ma_giai_thuong" class="form-control" placeholder="Mã GT..." aria-label=""
                            style="width: 100px;"
                            value="<?php echo isset($_GET["ma_giai_thuong"]) ? $_GET["ma_giai_thuong"] : null; ?>">
                 </td>
-                <td><input type="text" name="ho_ten" class="form-control" placeholder="Họ và tên..."
+                <td><input type="text" name="ho_ten" class="form-control" placeholder="Họ và tên..." aria-label=""
                            value="<?php echo isset($_GET["ho_ten"]) ? $_GET["ho_ten"] : null; ?>">
                 </td>
-                <td><input type="text" name="ten_giai_thuong" class="form-control" placeholder="Tên giải thưởng..."
+                <td><input type="text" name="ten_giai_thuong" class="form-control" placeholder="Tên giải thưởng..." aria-label=""
                            value="<?php echo isset($_GET["ten_giai_thuong"]) ? $_GET["ten_giai_thuong"] : null; ?>">
                 </td>
                 <td>
@@ -132,27 +137,27 @@ while ($row = mysqli_fetch_row($i_giai_thuong)) {
                   ?>
                 </td>
                 <td>
-                  <select name="to_chuc_thuong" id="to_chuc_thuong" class="form-control">
+                  <select name="to_chuc_thuong" id="to_chuc_thuong" class="form-control" aria-label="">
                     <option value="">Chọn tổ chức thưởng</option>
                     <?php
-                    echo '<option value="Trung ương" class=""' . (($_GET["to_chuc_thuong"] == "Trung ương") ? 'selected' : '') . '>Trung ương</option>';
-                    echo '<option value="Địa phương" class=""' . (($_GET["to_chuc_thuong"] == "Địa phương") ? 'selected' : '') . '>Địa phương</option>';
-                    echo '<option value="Tổ chức trong nước" class=""' . (($_GET["to_chuc_thuong"] == "Tổ chức trong nước") ? 'selected' : '') . '>Tổ chức trong nước</option>';
-                    echo '<option value="Tổ chức nước ngoài" class=""' . (($_GET["to_chuc_thuong"] == "Tổ chức nước ngoài") ? 'selected' : '') . '>Tổ chức nước ngoài</option>';
-                    echo '<option value="Quốc gia nước ngoài" class=""' . (($_GET["to_chuc_thuong"] == "Quốc gia nước ngoài") ? 'selected' : '') . '>Quốc gia nước ngoài</option>';
+                    echo '<option value="Trung ương" class="" ' . (($_GET["to_chuc_thuong"] == "Trung ương") ? 'selected' : '') . '>Trung ương</option>';
+                    echo '<option value="Địa phương" class="" ' . (($_GET["to_chuc_thuong"] == "Địa phương") ? 'selected' : '') . '>Địa phương</option>';
+                    echo '<option value="Tổ chức trong nước" class="" ' . (($_GET["to_chuc_thuong"] == "Tổ chức trong nước") ? 'selected' : '') . '>Tổ chức trong nước</option>';
+                    echo '<option value="Tổ chức nước ngoài" class="" ' . (($_GET["to_chuc_thuong"] == "Tổ chức nước ngoài") ? 'selected' : '') . '>Tổ chức nước ngoài</option>';
+                    echo '<option value="Quốc gia nước ngoài" class="" ' . (($_GET["to_chuc_thuong"] == "Quốc gia nước ngoài") ? 'selected' : '') . '>Quốc gia nước ngoài</option>';
                     ?>
                   </select>
                 </td>
-                <td><input type="text" name="to_chuc_trao_giai" class="form-control" placeholder="Tổ chức trao giải..."
+                <td><input type="text" name="to_chuc_trao_giai" class="form-control" placeholder="Tổ chức trao giải..." aria-label=""
                            value="<?php echo isset($_GET["to_chuc_trao_giai"]) ? $_GET["to_chuc_trao_giai"] : null; ?>">
                 </td>
                 <td>
-                  <input placeholder="Ngày BĐ" name="ngay_quyet_dinh_start" class="form-control"
+                  <input placeholder="Ngày BĐ" name="ngay_quyet_dinh_start" class="form-control" aria-label=""
                          style="height: 20px; font-size: 10px" type="text" onfocus="(this.type='date')"
                          onblur="(this.type='text')"
                          id="date"
                          value="<?php echo isset($_GET["ngay_quyet_dinh_start"]) ? $_GET["ngay_quyet_dinh_start"] : null; ?>"/>
-                  <input placeholder="Ngày KT" name="ngay_quyet_dinh_end" class="form-control mt-1"
+                  <input placeholder="Ngày KT" name="ngay_quyet_dinh_end" class="form-control mt-1" aria-label=""
                          style="height: 20px; font-size: 10px" type="text" onfocus="(this.type='date')"
                          onblur="(this.type='text')"
                          id="date"
@@ -162,7 +167,6 @@ while ($row = mysqli_fetch_row($i_giai_thuong)) {
                 <td class="d-flex">
                   <button type="submit" class="btn btn-info">Search</button>
                   <a href="index.php" class="btn btn-secondary ml-3">Reset</a></td>
-              </tr>
             </form>
             <?php echo $content; ?>
             </tbody>
@@ -250,7 +254,6 @@ while ($row = mysqli_fetch_row($i_giai_thuong)) {
 <?php
 include_once("../../footer.php");
 ?>
-</div>
 </body>
 </html>
 

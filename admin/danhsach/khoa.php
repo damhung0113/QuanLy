@@ -25,7 +25,12 @@ $total_records = $total_records['total_records'];
 $total_no_of_pages = ceil($total_records / $total_records_per_page);
 $second_last = $total_no_of_pages - 1; // total page minus 1
 
-$ds_khoa = get_ds_khoa($offset, $total_records_per_page);
+if(isset($_GET["truong"])) {
+  $where = "Ma_truong = " . $_GET["truong"];
+  $ds_khoa = get_ds_khoa_filter_where($offset, $total_records_per_page, $where);
+} else {
+  $ds_khoa = get_ds_khoa($offset, $total_records_per_page);
+}
 $content = '';
 while ($row = mysqli_fetch_row($ds_khoa)) {
   $content .= '<tr><td>' . $row[0] .
@@ -47,7 +52,6 @@ while ($row = mysqli_fetch_row($ds_khoa)) {
   <link rel="stylesheet" href="/QuanLy/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="shortcut icon" href="/QuanLy/images/favicon.ico" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -78,23 +82,8 @@ while ($row = mysqli_fetch_row($ds_khoa)) {
               </thead>
               <tbody>
               <form>
-                <td><input type="text" name="ma_truong" class="form-control" placeholder="Mã trường..."
-                           value="<?php echo isset($_GET["ma_truong"]) ? $_GET["ma_truong"] : null; ?>"></td>
-                <td>
-                  <?php
-                  $ds_khoa_filter = get_ds_khoa_filter();
-                  echo '<select name="khoa" class="form-control">';
-                  echo '<option value="">Chọn một khoa...</option>';
-                  while ($row = mysqli_fetch_row($ds_khoa_filter)) {
-                    if ($row[0] == $_GET["khoa"]) {
-                      echo '<option value="' . $row[0] . '" selected>' . $row[1] . '</option>';
-                    } else {
-                      echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
-                    }
-                  }
-                  echo '</select>';
-                  ?>
-                </td>
+                <td></td>
+                <td></td>
                 <td>
                   <?php
                   $ds_truong_filter = get_ds_truong_filter();
@@ -112,7 +101,7 @@ while ($row = mysqli_fetch_row($ds_khoa)) {
                 </td>
                 <td class="text-center" style="width: 80px;">
                   <button type="submit" class="btn btn-info">Search</button>
-                  <a href="index.php" class="btn btn-secondary ml-3">Reset</a>
+                  <a href="khoa.php" class="btn btn-secondary ml-3">Reset</a>
                 </td>
               </form>
               <?php echo $content; ?>

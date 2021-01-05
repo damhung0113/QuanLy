@@ -63,7 +63,7 @@ while ($row = mysqli_fetch_row($titles)) {
       '</td><td>' . $chien_si_thi_dua .
       '</td><td>' . $dt->format('m-d-Y') .
       '</td><td>' . $row[4] .
-      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="edit.php?Ma_danh_hieu=' . $row[0] . '&Ma_cb=' . $row[1] . '&Chien_si_thi_dua=' . $row[2] . '&Ngay=' . $row[3] . '&So_qd=' . $row[4] . '"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="destroy.php?Ma_danh_hieu=' . $row[0] . '"' . '>Xóa</a>' .
+      '</td><td>' . '<a class="btn btn-success mr-3" type="button" href="edit.php?ma_danh_hieu=' . $row[0] . '&ma_cb=' . $row[1] . '&chien_si_thi_dua=' . $row[2] . '&ngay=' . $dt->format('Y-m-d') . '&so_qd=' . $row[4] . '"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="destroy.php?Ma_danh_hieu=' . $row[0] . '"' . '>Xóa</a>' .
       '</td></tr>';
 }
 ?>
@@ -79,7 +79,6 @@ while ($row = mysqli_fetch_row($titles)) {
   <link rel="stylesheet" href="/QuanLy/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="shortcut icon" href="/QuanLy/images/favicon.ico" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -112,12 +111,13 @@ while ($row = mysqli_fetch_row($titles)) {
               </thead>
               <tbody>
               <form>
-                <td><input type="text" name="ma_qd" class="form-control" placeholder="Mã QĐ..."
+                <td><input type="text" name="ma_qd" class="form-control" placeholder="Mã QĐ..." aria-label=""
                            style="width: 50px" value="<?php echo isset($_GET["ma_qd"]) ? $_GET["ma_qd"] : null; ?>">
                 </td>
-                <td><input type="text" name="ho_ten" class="form-control" placeholder="Họ và tên..."
+                <td><input type="text" name="ho_ten" class="form-control" placeholder="Họ và tên..." aria-label=""
                            value="<?php echo isset($_GET["ho_ten"]) ? $_GET["ho_ten"] : null; ?>"></td>
-                <td><?php
+                <td>
+                  <?php
                   $ds_danh_hieu_filter = get_ds_danh_hieu();
                   echo '<select name="danh_hieu" class="form-control">';
                   echo '<option value="">Chọn một danh hiệu...</option>';
@@ -131,18 +131,18 @@ while ($row = mysqli_fetch_row($titles)) {
                   echo '</select>';
                   ?></td>
                 <td style="width: 100px;">
-                  <input placeholder="Ngày BĐ" name="ngay_quyet_dinh_start" class="form-control"
+                  <input placeholder="Ngày BĐ" name="ngay_quyet_dinh_start" class="form-control" aria-label=""
                          style="height: 20px; font-size: 10px" type="text" onfocus="(this.type='date')"
                          onblur="(this.type='text')"
                          id="date"
                          value="<?php echo isset($_GET["ngay_quyet_dinh_start"]) ? $_GET["ngay_quyet_dinh_start"] : null; ?>"/>
-                  <input placeholder="Ngày KT" name="ngay_quyet_dinh_end" class="form-control mt-1"
+                  <input placeholder="Ngày KT" name="ngay_quyet_dinh_end" class="form-control mt-1" aria-label=""
                          style="height: 20px; font-size: 10px" type="text" onfocus="(this.type='date')"
                          onblur="(this.type='text')"
                          id="date"
                          value="<?php echo isset($_GET["ngay_quyet_dinh_end"]) ? $_GET["ngay_quyet_dinh_end"] : null; ?>"/>
                 </td>
-                <td><input type="text" name="so_qd" class="form-control" placeholder="Số quyết định..."
+                <td><input type="text" name="so_qd" class="form-control" placeholder="Số quyết định..." aria-label=""
                            value="<?php echo isset($_GET["so_qd"]) ? $_GET["so_qd"] : null; ?>"></td>
                 <td class="d-flex">
                   <button type="submit" class="btn btn-info">Search</button>
@@ -239,9 +239,3 @@ while ($row = mysqli_fetch_row($titles)) {
 </div>
 </body>
 </html>
-
-<!--<script>-->
-<!--    $("#close-sidebar").click(function () {-->
-<!--        $(".page-wrapper").removeClass("toggled")-->
-<!--    })-->
-<!--</script>-->

@@ -17,7 +17,7 @@ echo '</li>';
 echo '<li>';
 echo '<a class="text-light" href="" style="text-decoration: none;">' . 'Xin chào: ' . '<b>' . $_SESSION["current_user"] . ' [' . $vaitro[$_SESSION["role"]] . ']' . '</b>' . '</a>';
 echo '</li>';
-echo '<a href="index.php?act=logout" class="btn btn-danger float-right">Đăng xuất</a>';
+echo '<a href="/QuanLy/taikhoan/logout.php?act=logout" class="btn btn-danger float-right">Đăng xuất</a>';
 echo '</li>';
 echo '</ul>';
 echo '</div>';

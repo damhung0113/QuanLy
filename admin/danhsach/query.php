@@ -11,6 +11,11 @@ function get_ds_khoa($offset, $total_records_per_page) {
   return mysqli_query($connect, "select * from danh_sach_khoa limit $offset, $total_records_per_page");
 }
 
+function get_ds_khoa_filter_where($offset, $total_records_per_page, $where) {
+  global $connect;
+  return mysqli_query($connect, "select * from danh_sach_khoa where $where limit $offset, $total_records_per_page");
+}
+
 function get_ds_bo_mon($offset, $total_records_per_page) {
   global $connect;
   return mysqli_query($connect, "select * from danh_sach_bo_mon limit $offset, $total_records_per_page");
@@ -22,6 +27,11 @@ function count_data_truong() {
 }
 
 function count_data_khoa() {
+  global $connect;
+  return mysqli_query($connect, "select COUNT(*) As total_records FROM danh_sach_bo_mon");
+}
+
+function count_data_bo_mon() {
   global $connect;
   return mysqli_query($connect, "select COUNT(*) As total_records FROM danh_sach_khoa");
 }

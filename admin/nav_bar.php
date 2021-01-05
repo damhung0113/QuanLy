@@ -107,45 +107,46 @@
           <li class="header-menu">
             <span>Extra</span>
           </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-check-square-o"></i>
-              <span>GỢI Ý KHEN THƯỞNG</span>
-            </a>
-          </li>
-          <!--          <li>-->
-          <!--            <a href="#">-->
-          <!--              <i class="fa fa-upload" aria-hidden="true"></i>-->
-          <!--              <span>NHẬP DỮ LIỆU TỪ FILE</span>-->
-          <!--            </a>-->
-          <!--          </li>-->
           <li class="sidebar-dropdown <?php echo strpos($_SERVER['REQUEST_URI'], 'export') !== false ? 'active' : ''; ?>">
-            <a href="/QuanLy/admin/export/index.php">
+            <a data-toggle="collapse" href="#collapse-export-file" role="button"
+               aria-expanded="false" aria-controls="collapse-export-file">
               <i class="fa fa-file-excel-o" aria-hidden="true"></i>
               <span>XUẤT DỮ LIỆU RA FILE</span>
             </a>
+            <div class="collapse chained_node" id="collapse-export-file" style="background: #3a3f48; width: 100%;">
+              <a href="/QuanLy/admin/export/index.php" class="dropdown-item">
+                <i class="fa fa-user" aria-hidden="true"></i><span>XUẤT DỮ LIỆU THEO CÁN BỘ</span>
+              </a>
+              <a href="/QuanLy/admin/export/index.php" class="dropdown-item">
+                <i class="fa fa-users" aria-hidden="true"></i><span>XUẤT DỮ LIỆU THEO ƯỜNG</span>
+              </a>
+            </div>
           </li>
-          <li class="header-menu">
-            <span>Manage</span>
-          </li>
-          <li class="sidebar-dropdown <?php echo strpos($_SERVER['REQUEST_URI'], 'danhsach/truong.php') !== false ? 'active' : ''; ?>">
-            <a href="/QuanLy/admin/danhsach/truong.php">
-              <i class="fa fa-bars" aria-hidden="true"></i>
-              <span>DANH SÁCH TRƯỜNG</span>
-            </a>
-          </li>
-          <li class="sidebar-dropdown <?php echo strpos($_SERVER['REQUEST_URI'], 'danhsach/khoa.php') !== false ? 'active' : ''; ?>">
-            <a href="/QuanLy/admin/danhsach/khoa.php">
-              <i class="fa fa-bars" aria-hidden="true"></i>
-              <span>DANH SÁCH KHOA</span>
-            </a>
-          </li>
-          <li class="sidebar-dropdown <?php echo strpos($_SERVER['REQUEST_URI'], 'danhsach/bomon.php') !== false ? 'active' : ''; ?>">
-            <a href="/QuanLy/admin/danhsach/bomon.php">
-              <i class="fa fa-bars" aria-hidden="true"></i>
-              <span>DANH SÁCH BỘ MÔN</span>
-            </a>
-          </li>
+          <?php
+          if ($_SESSION["role"] == 0) {
+            echo '<li class="header-menu">';
+            echo '<span>Manage</span>';
+            echo '</li>';
+            echo '<li class="sidebar-dropdown ' . (strpos($_SERVER['REQUEST_URI'], 'danhsach/truong.php') !== false ? 'active' : '') . '">';
+            echo '<a href="/QuanLy/admin/danhsach/truong.php">';
+            echo '<i class="fa fa-bars" aria-hidden="true"></i>';
+            echo '<span>DANH SÁCH TRƯỜNG</span>';
+            echo '</a>';
+            echo '</li>';
+            echo '<li class="sidebar-dropdown"' . (strpos($_SERVER['REQUEST_URI'], 'danhsach/khoa.php') !== false ? 'active' : '') . '">';
+            echo '<a href="/QuanLy/admin/danhsach/khoa.php">';
+            echo '<i class="fa fa-bars" aria-hidden="true"></i>';
+            echo '<span>DANH SÁCH KHOA</span>';
+            echo '</a>';
+            echo '</li>';
+            echo '<li class="sidebar-dropdown"' . (strpos($_SERVER['REQUEST_URI'], 'danhsach/bomon.php') !== false ? 'active' : '')  . '">';
+            echo '<a href="/QuanLy/admin/danhsach/bomon.php">';
+            echo '<i class="fa fa-bars" aria-hidden="true"></i>';
+            echo '<span>DANH SÁCH BỘ MÔN</span>';
+            echo '</a>';
+            echo '</li>';
+          }
+          ?>
         </ul>
       </div>
       <div class="sidebar-footer">

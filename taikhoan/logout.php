@@ -4,9 +4,9 @@ global $connect;
 
 $vaitro = ["Người quản lý", "Trưởng đơn vị (Cấp Đại học Quốc gia)", "Trưởng đơn vị (Cấp trường)", "Trưởng đơn vị (Cấp khoa)"];
 
-//if (isset($_SESSION["loged_user"])) {
-//  header("Location: /QuanLy/index.php");
-//}
+if (isset($_SESSION["loged_user"])) {
+  header("Location: /QuanLy/index.php");
+}
 
 if (isset($_GET["act"]) && $_GET["act"] == "logout") {
   unset($_SESSION["loged_admin"]);

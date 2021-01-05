@@ -20,6 +20,7 @@ if (isset($_SESSION["loged_admin"])) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
+<body class="bg-login">
 <div class="container">
   <div class="row">
     <div class="col-md-12 mt-5 d-flex flex-column justify-content-center">
@@ -54,6 +55,15 @@ if (isset($_SESSION["loged_admin"])) {
     </div>
   </div>
 </div>
+</body>
+
+<style>
+    .bg-login {
+        height: 100%;
+        background: url("../images/background.jpg") no-repeat center;
+        background-size: cover;
+    }
+</style>
 
 <?php
 
@@ -69,7 +79,7 @@ if (isset($_POST["dangnhap"])) {
       $_SESSION["loged_admin"] = true;
     } else {
       header("Location: ../index.php");
-      $_SESSION["loged_user"] = true;
+      $_SESSION["loged_admin"] = true;
     }
     $_SESSION["role"] = $role;
     $_SESSION["current_user"] = $tk; // Lưu lại tài khoản hiện thời

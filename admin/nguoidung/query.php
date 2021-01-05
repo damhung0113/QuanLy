@@ -33,3 +33,8 @@ function count_data() {
   global $connect;
   return mysqli_query($connect, "select COUNT(*) As total_records FROM nguoi_dung");
 }
+
+function get_ten_truong($ma_truong) {
+  global $connect;
+  return mysqli_query($connect, "select Ten_truong from danh_sach_truong where Ma_truong='$ma_truong'");
+}

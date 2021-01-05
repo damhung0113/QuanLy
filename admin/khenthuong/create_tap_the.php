@@ -32,7 +32,11 @@ while ($row = mysqli_fetch_row($ma_hinh_thuc)) {
 $ds_truong = get_ds_truong();
 $ds_khoa = get_ds_khoa();
 $truong = '<option value="" disabled selected>Chọn một trường</option>';
-$khoa = '';
+if(isset($_GET["truong"])) {
+  $khoa = '';
+} else {
+  $khoa = '<option value="" disabled selected>Phải chọn một trường trước</option>';
+}
 while ($row = mysqli_fetch_row($ds_truong)) {
   if (isset($_GET["truong"]) && $row[0] == intval($_GET["truong"])) {
     $khoa_chained = $row[0];
@@ -96,7 +100,7 @@ if (isset($_POST["create"])) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-  <script language=JavaScript>
+  <script lang=JavaScript>
       function reloadTruong(form) {
           const val = form.truong.options[form.truong.options.selectedIndex].value;
           self.location = 'create_tap_the.php?truong=' + val;
@@ -155,7 +159,7 @@ if (isset($_POST["create"])) {
                   <input required type="date" class="form-control" name="ngay_qd" id="ngay_qd" aria-label="">
                 </div>
                 <div class="form-group">
-                  <label for="li_do">Lí do</label></br>
+                  <label for="li_do">Lí do</label><br>
                   <textarea name="li_do" id="li_do" cols="70" rows="5"></textarea>
                 </div>
                 <button type="submit" name="create" class="btn btn-primary btn float-right" id="">
@@ -171,6 +175,6 @@ if (isset($_POST["create"])) {
 </form>
 </body>
 </html>
-<script>
-  $('#so_quyet_dinh').val('QD' + Math.floor((Math.random() * 9) + 1) + '' + Math.floor((Math.random() * 9) + 1) + '' + Math.floor((Math.random() * 9) + 1)  + '' + Math.floor((Math.random() * 9) + 1))
-</script>
+<!--<script>-->
+<!--  $('#so_quyet_dinh').val('QD' + Math.floor((Math.random() * 9) + 1) + '' + Math.floor((Math.random() * 9) + 1) + '' + Math.floor((Math.random() * 9) + 1)  + '' + Math.floor((Math.random() * 9) + 1))-->
+<!--</script>-->

@@ -31,7 +31,11 @@ $content = '';
 $users = select();
 $vaitro = ["Người quản lý", "Trưởng đơn vị (Cấp Đại học Quốc gia)", "Trưởng đơn vị (Cấp trường)", "Trưởng đơn vị (Cấp khoa)"];
 while ($row = mysqli_fetch_row($users)) {
-  $truong_don_vi = is_null($row[3]) ? "Không thuộc đơn vị nào" : $truong_don_vi;
+  if (isset($row[3])) {
+    $truong_don_vi = (isset(mysqli_fetch_object(get_ten_truong($row[3]+1))->Ten_truong) ? mysqli_fetch_object(get_ten_truong($row[3]+1))->Ten_truong : "");
+  } else {
+    $truong_don_vi = "Không thuộc đơn vị nào";
+  }
   $content .= '<tr><td>' . $row[0] .
       '</td><td>' . $vaitro[$row[2]] .
       '</td><td>' . $truong_don_vi .
@@ -49,12 +53,11 @@ while ($row = mysqli_fetch_row($users)) {
   <meta charset="utf-8">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/QuanLy/css/login.css">
-  <link rel="stylesheet" href="/QuanLy/css/style.css">
-  <link rel="stylesheet" href="/QuanLy/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/login.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="shortcut icon" href="/QuanLy/images/favicon.ico" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script>
@@ -176,6 +179,5 @@ while ($row = mysqli_fetch_row($users)) {
 <?php
 include_once("../../footer.php");
 ?>
-</div>
 </body>
 </html>

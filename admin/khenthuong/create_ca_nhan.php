@@ -67,7 +67,6 @@ if (isset($_POST["create"])) {
 
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <title>Quản Lý Danh Hiệu Thi Đua</title>
   <meta charset="utf-8">
@@ -75,15 +74,13 @@ if (isset($_POST["create"])) {
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
   <script lang="javascript">
-      function get_ten_cb(form) {
-          const ma_cb = form.ma_cb.value;
-          self.location = 'create_ca_nhan.php?ma_cb=' + ma_cb;
-      }
+    function get_ten_cb(form) {
+      const ma_cb = form.ma_cb.value;
+      self.location = 'create_ca_nhan.php?ma_cb=' + ma_cb;
+    }
   </script>
 </head>
-
 <body>
 <form action="" method="post">
   <div class="row">
@@ -134,12 +131,10 @@ if (isset($_POST["create"])) {
                   <input required type="date" class="form-control" name="ngay_qd" id="ngay_qd" aria-label="">
                 </div>
                 <div class="form-group">
-                  <label for="li_do">Lí do</label></br>
+                  <label for="li_do">Lí do</label><br>
                   <textarea name="li_do" id="li_do" cols="70" rows="5"></textarea>
                 </div>
-                <button type="submit" name="create" class="btn btn-primary btn float-right" id="">
-                  Thêm mới
-                </button>
+                <button type="submit" name="create" class="btn btn-primary btn float-right" id="">Thêm mới</button>
               </form>
             </div>
           </div>
@@ -150,7 +145,6 @@ if (isset($_POST["create"])) {
 </form>
 </body>
 </html>
-
 <!--<script>-->
 <!--  $('#so_quyet_dinh').val('QD' + Math.floor((Math.random() * 9) + 1) + '' + Math.floor((Math.random() * 9) + 1) + '' + Math.floor((Math.random() * 9) + 1)  + '' + Math.floor((Math.random() * 9) + 1))-->
 <!--</script>-->

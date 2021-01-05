@@ -33,6 +33,7 @@ while ($row = mysqli_fetch_row($ds_truong)) {
       '</td><td class="text-center">' . '<a class="btn btn-success mr-3" type="button" href="#"' . '>Sửa</a>' . '<a class="btn btn-danger" type="button" href="#"' . '>Xóa</a>' .
       '</td></tr>';
 }
+
 ?>
 
 <html lang="vi">
@@ -46,7 +47,6 @@ while ($row = mysqli_fetch_row($ds_truong)) {
   <link rel="stylesheet" href="/QuanLy/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="shortcut icon" href="/QuanLy/images/favicon.ico" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -75,29 +75,6 @@ while ($row = mysqli_fetch_row($ds_truong)) {
               </tr>
               </thead>
               <tbody>
-              <form>
-                <td><input type="text" name="ma_truong" class="form-control" placeholder="Mã trường..."
-                           value="<?php echo isset($_GET["ma_truong"]) ? $_GET["ma_truong"] : null; ?>"></td>
-                <td>
-                  <?php
-                  $ds_truong_filter = get_ds_truong_filter();
-                  echo '<select name="truong" class="form-control">';
-                  echo '<option value="">Chọn một trường...</option>';
-                  while ($row = mysqli_fetch_row($ds_truong_filter)) {
-                    if ($row[0] == $_GET["truong"]) {
-                      echo '<option value="' . $row[0] . '" selected>' . $row[1] . '</option>';
-                    } else {
-                      echo '<option value="' . $row[0] . '">' . $row[1] . '</option>';
-                    }
-                  }
-                  echo '</select>';
-                  ?>
-                </td>
-                <td class="text-center" style="width: 80px;">
-                  <button type="submit" class="btn btn-info">Search</button>
-                  <a href="index.php" class="btn btn-secondary ml-3">Reset</a>
-                </td>
-              </form>
               <?php echo $content; ?>
               </tbody>
             </table>
